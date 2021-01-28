@@ -1,0 +1,25 @@
+{
+    "name": "mexican-particles/mogmog",
+    "description": "mogmog is mogmog",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.70",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
