@@ -1,0 +1,10 @@
+parameters:
+	level: 7
+	paths:
+		- tests
+#	ignoreErrors:
+#		- '#Cannot call method [a-zA-Z]+\(\) on [a-zA-Z]+#'
+#		- '#Call to an undefined method [a-zA-Z0-9\|\\]+::[a-zA-Z]+\(\)#'
+#		- '#Parameter \#[1-9] \$[a-zA-Z]+ of class [a-zA-Z\\]+ constructor expects [a-zA-Z\|\\]+, object given#'
+	reportUnmatchedIgnoredErrors: false
+	checkMissingIterableValueType: false

@@ -1,0 +1,34 @@
+version: '3.7'
+
+volumes:
+  logs:
+    driver: local
+
+services:
+  mogmog:
+    build: ./docker/php
+    working_dir: /var/www
+    tty: true
+    environment:
+      docker: "true"
+    volumes:
+      - .:/var/www
+      - logs:/var/www/logs
+    networks:
+      - "backend-network"
+
+  mysql:
+    build: ./docker/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: test
+      TZ: "Asia/Tokyo"
+    ports:
+      - 3308:3306
+    networks:
+      - "backend-network"
+
+networks:
+  backend-network:
