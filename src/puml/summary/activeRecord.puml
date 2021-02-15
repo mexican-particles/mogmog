@@ -1,0 +1,15 @@
+@startuml
+
+[Service] as MapperService
+' ...
+[**UserActiveRecord**] as MapperComponent #Khaki
+database "**Database**" as MapperDatabase #Khaki {
+}
+
+MapperService .up.> MapperComponent
+' ...
+MapperComponent .right.> MapperDatabase
+
+note top of MapperComponent: ビジネスロジック
+
+@enduml

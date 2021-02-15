@@ -1,0 +1,33 @@
+@startuml
+
+frame "Gateway" {
+   [**Service**] as GatewayService #Khaki
+   [User] as GatewayUser
+   [**UserGateway**] as GatewayComponent #Khaki
+   database "**Database**" as GatewayDatabase #Khaki {
+   }
+}
+
+GatewayService .up.> GatewayComponent
+GatewayComponent .left.> GatewayUser
+GatewayComponent .right.> GatewayDatabase
+
+note top of GatewayComponent: Gateway は Service にドメインロジックがあるため、\nService -> UserGateway -> Database となる
+
+frame "Mapper" {
+   [Service] as MapperService
+   [**User**] as MapperUser #Khaki
+   [**UserMapper**] as MapperComponent #Khaki
+   database "**Database**" as MapperDatabase #Khaki {
+   }
+}
+
+MapperService .up.> MapperComponent
+MapperComponent .left.> MapperUser
+MapperComponent .right.> MapperDatabase
+
+note top of MapperComponent: Mapper は User にドメインロジックがあるため、\nUser <- UserMapper -> Database となる
+
+Gateway --[hidden]down--> Mapper
+
+@enduml

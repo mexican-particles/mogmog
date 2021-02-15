@@ -1,0 +1,15 @@
+@startuml
+
+[**Service**] as GatewayService #Khaki
+' ...
+[**UserRowDataGateway**] as GatewayComponent #Khaki
+database "**Database**" as GatewayDatabase #Khaki {
+}
+
+GatewayService .up.> GatewayComponent
+' ...
+GatewayComponent .right.> GatewayDatabase
+
+note bottom of GatewayService: ドメインロジック
+
+@enduml

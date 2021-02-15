@@ -1,0 +1,10 @@
+@startuml
+
+[Service] as Service
+[**User**] as User #Khaki
+
+Service .right.> User: use
+
+note top of User: ビジネスロジック
+
+@enduml
