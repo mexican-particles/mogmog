@@ -1,0 +1,115 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+left to right direction
+
+' 表示用の調整
+Application --[hidden]down> ServiceUser
+Domain --[hidden]up> DataResource
+DataResource --[hidden]up> Database
+
+ServiceUser --[hidden]down> ModelUser
+ServiceUser --[hidden]up> DataResourceUser
+ModelUser --[hidden]up> DataResourceUser
+
+Application .> DomainService: use
+DomainService .> DomainDataResource: use
+DomainService ..> DomainModel: use
+DomainDataResource .> DomainModel: use
+
+package Application <<Rectangle>> {
+}
+
+package Domain <<Rectangle>> {
+    package Model as DomainModel <<Frame>> {
+        package User as ModelUser <<Folder>> {
+            class UserCollection {
+                - items: Collection<T>
+                + {static} **fromArray(Array<T> userList)**: UserCollection<T>
+            }
+
+            interface GettableUserInterface {
+                + **getUserId()**:: int
+                + **getLevel()**:: int
+                + **getExp()**:: int
+            }
+
+            interface UserDomainModelInterface {
+                + **reflect(LevelInterface mstLevel, int expGained)**: void
+                - **setLevel(int level)**: void
+                - **addExp(int exp)**: void
+            }
+
+            class UserDomainModel {
+                + **reflect(LevelInterface mstLevel, int expGained)**: void
+                - **setLevel(int level)**: void
+                - **addExp(int exp)**: void
+            }
+        }
+
+        package Level as ModelLevel <<Folder>> {
+            interface LevelInterface {
+                + **getLevel()**: int
+            }
+        }
+    }
+
+    package DataResource as DomainDataResource <<Frame>> {
+        package Level as DataResourceLevel <<Folder>> {
+            interface DataResourceLevelInterface {
+                + **findByExp(int exp)**: LevelInterface
+            }
+        }
+        package User as DataResourceUser <<Folder>> {
+            interface UserMapperInterface {
+                + **findAll()**: UserCollection<UserDomainModelInterface>
+                + **findById(int userId)**: UserDomainModelInterface
+                + **create(UserCollection<UserDomainModelInterface> userCollection)**: int
+                + **update(UserCollection<UserDomainModelInterface> userCollection)**: int
+                + **delete(Array<int> userIdList)**: int
+            }
+        }
+    }
+
+    package Service as DomainService <<Frame>> {
+        package User as ServiceUser <<Folder>> {
+            interface LevelUpServiceInterface {
+                + **__invoke(int userId, int expGained)**: void
+            }
+
+            class LevelUpViaDataMapperService {
+                + **__invoke(int userId, int expGained)**: void
+            }
+        }
+    }
+}
+
+package DataResource <<Rectangle>> {
+    class UserMapper {
+        + **findAll()**: UserCollection<UserDomainModelInterface>
+        + **findById(int userId)**: UserDomainModelInterface
+        + **create(UserCollection<UserDomainModelInterface> userCollection)**: int
+        + **update(UserCollection<UserDomainModelInterface> userCollection)**: int
+        + **delete(Array<int> userIdList)**: int
+    }
+}
+
+'サービス / RowDataGateway と同じ
+LevelUpViaDataMapperService .|> LevelUpServiceInterface: implements
+
+'モデルのインターフェース / RowDataGateway と同じ
+GettableUserInterface -* UserCollection: composition
+UserDomainModelInterface -|> GettableUserInterface: extends
+
+'モデルの具象 / RowDataGateway とは異なる
+UserDomainModel .|> UserDomainModelInterface: implements
+
+'ゲートウェイの具象
+UserMapper .|> UserMapperInterface : implements
+
+package Database <<Database>> {
+}
+
+DataResource -down-> Database: connection
+
+@enduml

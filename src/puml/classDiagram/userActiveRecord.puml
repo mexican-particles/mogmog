@@ -1,0 +1,94 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+left to right direction
+
+' 表示用の調整
+Application --[hidden]down> ServiceUser
+Domain ----[hidden]down> Database
+
+ServiceUser --[hidden]down> ModelUser
+ModelLevel --[hidden]down> ModelUser
+
+Application .> DomainService: use
+DomainService ..> DomainModel: use
+
+package Application <<Rectangle>> {
+}
+
+package Domain <<Rectangle>> {
+    package Model as DomainModel <<Frame>> {
+        package User as ModelUser <<Folder>> {
+            class UserCollection {
+                - items: Collection<T>
+                + {static} **fromArray(Array<T> userList)**: UserCollection<T>
+            }
+
+            interface GettableUserInterface {
+                + **getUserId()**:: int
+                + **getLevel()**:: int
+                + **getExp()**:: int
+            }
+
+            interface UserDomainModelInterface {
+                + **reflect(LevelInterface mstLevel, int expGained)**: void
+                - **setLevel(int level)**: void
+                - **addExp(int exp)**: void
+            }
+
+            abstract class AbstractUserActiveRecord {
+                + {static} **findAll()**: UserCollection<UserDomainModelInterface>
+                + {static} **findById(int userId)**: UserDomainModelInterface
+                + {static} **create(UserCollection<UserDomainModelInterface> userCollection)**: int
+                + {static} **update(UserCollection<UserDomainModelInterface> userCollection)**: int
+                + {static} **delete(Array<int> userIdList)**: int
+            }
+
+            class UserActiveRecord  {
+                + **reflect(LevelInterface mstLevel, int expGained)**: void
+                - **setLevel(int level)**: void
+                - **addExp(int exp)**: void
+            }
+        }
+
+        package Level as ModelLevel <<Folder>> {
+            interface LevelInterface {
+                + **getLevel()**: int
+            }
+
+            interface LevelMapperInterface {
+                + **findByExp(int exp)**: LevelInterface
+            }
+        }
+    }
+
+    package Service as DomainService <<Frame>> {
+        package User as ServiceUser <<Folder>> {
+            interface LevelUpServiceInterface {
+                + **__invoke(int $userId, int $expGained)**: void
+            }
+
+            class LevelUpViaActiveRecordService {
+                + **__invoke(int $userId, int $expGained)**: void
+            }
+        }
+    }
+}
+
+'サービス / TableDataGateway と同じ
+LevelUpViaActiveRecordService .|> LevelUpServiceInterface: implements
+
+'モデルのインターフェース / TableDataGateway と同じ
+GettableUserInterface -* UserCollection: composition
+UserDomainModelInterface -|> GettableUserInterface: extends
+
+'モデルの具象 / TableDataGateway とは異なる
+AbstractUserActiveRecord .|> UserDomainModelInterface: implements
+UserActiveRecord .|> AbstractUserActiveRecord: extends
+
+package Database <<Database>> {
+}
+
+UserActiveRecord -right-> Database: connection
+
+@enduml

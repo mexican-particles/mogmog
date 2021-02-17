@@ -7,13 +7,13 @@ namespace Src\Example\State;
 /**
  * @package Src\Example\State
  */
-final class HumanStruct
+final class MutableHuman
 {
     public string $name = 'Kono';
 }
 
 // phpcs:disable PSR1.Files.SideEffects
-$human = new HumanStruct();
+$human = new MutableHuman();
 var_dump($human->name); // Kono
 
 $human->name = 'Sato';

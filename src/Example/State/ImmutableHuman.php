@@ -7,7 +7,7 @@ namespace Src\Example\State;
 /**
  * @package Src\Example\State
  */
-final class HumanDto
+final class ImmutableHuman
 {
     private string $name;
 
@@ -23,5 +23,5 @@ final class HumanDto
 }
 
 // phpcs:disable PSR1.Files.SideEffects
-$human = new HumanDto('Sato');
+$human = new ImmutableHuman('Sato');
 var_dump($human->getName()); // Sato

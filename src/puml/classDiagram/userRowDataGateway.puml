@@ -1,0 +1,96 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+left to right direction
+
+' 表示用の調整
+Application --[hidden]down> ServiceUser
+Domain ----[hidden]down> Database
+
+ServiceUser --[hidden]down> ModelUser
+ModelLevel --[hidden]down> ModelUser
+
+Application .> DomainService: use
+DomainService ..> DomainModel: use
+
+package Application <<Rectangle>> {
+}
+
+package Domain <<Rectangle>> {
+    package Model as DomainModel <<Frame>> {
+        package User as ModelUser <<Folder>> {
+            class UserCollection {
+                - items: Collection<T>
+                + {static} **fromArray(Array<T> userList)**: UserCollection<T>
+            }
+
+            interface GettableUserInterface {
+                + **getUserId()**:: int
+                + **getLevel()**:: int
+                + **getExp()**:: int
+            }
+
+            interface SettableUserInterface {
+                + **setUserId(int userId)**:: int
+                + **setLevel(int level)**:: int
+                + **setExp(int exp)**:: int
+            }
+
+            class SettableUser {
+                + **setUserId(int userId)**:: int
+                + **setLevel(int level)**:: int
+                + **setExp(int exp)**:: int
+            }
+
+            class UserRowDataGateway {
+                + {static} **findAll()**: UserCollection<SettableUserInterface>
+                + {static} **findById(int userId)**: SettableUserInterface
+                + {static} **create(UserCollection<SettableUserInterface> userCollection)**: int
+                + {static} **update(UserCollection<SettableUserInterface> userCollection)**: int
+                + {static} **delete(Array<int> userIdList)**: int
+            }
+        }
+
+        package Level as ModelLevel <<Folder>> {
+            interface LevelInterface {
+                + **getLevel()**: int
+            }
+            interface DataResourceLevelInterface {
+                + **findByExp(int exp)**: LevelInterface
+            }
+        }
+    }
+
+    package Service as DomainService <<Frame>> {
+        package User as ServiceUser <<Folder>> {
+            interface LevelUpServiceInterface {
+                + **__invoke(int userId, int expGained)**: void
+            }
+
+            class LevelUpViaRowDataGatewayService {
+                + **__invoke(int userId, int expGained)**: void
+                - **reflect(LevelInterface mstLevel, int expGained, SettableUserInterface user)**: void
+                - **setLevel(int level, SettableUserInterface user)**: void
+                - **addExp(int exp, SettableUserInterface user)**: void
+            }
+        }
+    }
+}
+
+'サービス / TableDataGateway と同じ
+LevelUpViaRowDataGatewayService .|> LevelUpServiceInterface: implements
+
+'モデルのインターフェース / TableDataGateway と同じ
+GettableUserInterface -* UserCollection: composition
+SettableUserInterface -|> GettableUserInterface: extends
+
+'モデルの具象 / TableDataGateway とは異なる
+SettableUser .|> SettableUserInterface: implements
+UserRowDataGateway .|> SettableUser: extends
+
+package Database <<Database>> {
+}
+
+UserRowDataGateway -right-> Database: connection
+
+@enduml

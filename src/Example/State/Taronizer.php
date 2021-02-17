@@ -9,9 +9,9 @@ namespace Src\Example\State;
  */
 final class Taronizer
 {
-    private HumanStruct $human;
+    private MutableHuman $human;
 
-    public function __construct(HumanStruct $human)
+    public function __construct(MutableHuman $human)
     {
         $this->human = $human;
     }
@@ -23,7 +23,7 @@ final class Taronizer
 }
 
 // phpcs:disable PSR1.Files.SideEffects
-$human = new HumanStruct();
+$human = new MutableHuman();
 $taronized = new Taronizer($human);
 var_dump($taronized->getUserName()); // Kono Taro
 

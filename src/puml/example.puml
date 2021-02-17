@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+
+Actor -u- (Up)
+Actor -l- (Left)
+Actor -r- (Right)
+Actor -d- (Down)
+
+@enduml
