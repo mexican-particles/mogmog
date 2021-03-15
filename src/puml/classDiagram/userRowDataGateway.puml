@@ -3,7 +3,6 @@
 
 left to right direction
 
-' 表示用の調整
 Application --[hidden]down> ServiceUser
 Domain ----[hidden]down> Database
 
@@ -28,6 +27,12 @@ package Domain <<Rectangle>> {
                 + **getUserId()**:: int
                 + **getLevel()**:: int
                 + **getExp()**:: int
+            }
+
+            class GettableUser {
+                + **getUserId(int userId)**:: int
+                + **getLevel(int level)**:: int
+                + **getExp(int exp)**:: int
             }
 
             interface SettableUserInterface {
@@ -55,6 +60,7 @@ package Domain <<Rectangle>> {
             interface LevelInterface {
                 + **getLevel()**: int
             }
+
             interface DataResourceLevelInterface {
                 + **findByExp(int exp)**: LevelInterface
             }
@@ -77,16 +83,14 @@ package Domain <<Rectangle>> {
     }
 }
 
-'サービス / TableDataGateway と同じ
 LevelUpViaRowDataGatewayService .|> LevelUpServiceInterface: implements
 
-'モデルのインターフェース / TableDataGateway と同じ
 GettableUserInterface -* UserCollection: composition
-SettableUserInterface -|> GettableUserInterface: extends
 
-'モデルの具象 / TableDataGateway とは異なる
+GettableUser -|> GettableUserInterface: extends
 SettableUser .|> SettableUserInterface: implements
-UserRowDataGateway .|> SettableUser: extends
+SettableUser -|> GettableUser: extends
+UserRowDataGateway -|> SettableUser: extends
 
 package Database <<Database>> {
 }
