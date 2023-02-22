@@ -56,8 +56,11 @@ final class LevelUpViaTableDataGatewayService implements LevelUpServiceInterface
      * @param int $expGained
      * @param SettableUserInterface $user
      */
-    private function reflect(LevelInterface $mstLevel, int $expGained, SettableUserInterface $user): void
-    {
+    private function reflect(
+        LevelInterface        $mstLevel,
+        int                   $expGained,
+        SettableUserInterface $user
+    ): void {
         $this->setLevel($mstLevel->getLevel(), $user);
         $this->addExp($expGained, $user);
     }

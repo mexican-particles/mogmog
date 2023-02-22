@@ -23,7 +23,7 @@ package Domain <<Rectangle>> {
     package Model as DomainModel <<Frame>> {
         package User as ModelUser <<Folder>> {
             class UserCollection {
-                - items: Collection<T>
+                - items: Collection<T extends GettableUserInterface>
                 + {static} **fromArray(Array<T> userList)**: UserCollection<T>
             }
 
@@ -66,7 +66,7 @@ package Domain <<Rectangle>> {
             }
         }
         package User as DataResourceUser <<Folder>> {
-            interface UserMapperInterface {
+            interface userDataMapperInterface {
                 + **findAll()**: UserCollection<UserDomainModelInterface>
                 + **findById(int userId)**: UserDomainModelInterface
                 + **create(UserCollection<UserDomainModelInterface> userCollection)**: int
@@ -90,7 +90,7 @@ package Domain <<Rectangle>> {
 }
 
 package DataResource <<Rectangle>> {
-    class UserMapper {
+    class userDataMapper {
         + **findAll()**: UserCollection<UserDomainModelInterface>
         + **findById(int userId)**: UserDomainModelInterface
         + **create(UserCollection<UserDomainModelInterface> userCollection)**: int
@@ -101,13 +101,13 @@ package DataResource <<Rectangle>> {
 
 LevelUpViaDataMapperService .|> LevelUpServiceInterface: implements
 
-GettableUserInterface -* UserCollection: composition
+GettableUserInterface *- UserCollection: composition
 
 GettableUser -|> GettableUserInterface: extends
 UserDomainModel .|> UserDomainModelInterface: implements
 UserDomainModel -|> GettableUser: extends
 
-UserMapper .|> UserMapperInterface : implements
+userDataMapper .|> userDataMapperInterface : implements
 
 package Database <<Database>> {
 }

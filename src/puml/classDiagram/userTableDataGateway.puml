@@ -23,7 +23,7 @@ package Domain <<Rectangle>> {
     package Model as DomainModel <<Frame>> {
         package User as ModelUser <<Folder>> {
             class UserCollection {
-                - items: Collection<T>
+                - items: Collection<T extends GettableUserInterface>
                 + {static} **fromArray(Array<T> userList)**: UserCollection<T>
             }
 
@@ -104,7 +104,7 @@ package DataResource <<Rectangle>> {
 
 LevelUpViaTableDataGatewayService .|> LevelUpServiceInterface: implements
 
-GettableUserInterface -* UserCollection: composition
+GettableUserInterface *- UserCollection: composition
 
 GettableUser -|> GettableUserInterface: extends
 SettableUser .|> SettableUserInterface: implements

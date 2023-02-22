@@ -10,6 +10,6 @@ MapperService .up.> MapperComponent
 ' ...
 MapperComponent .right.> MapperDatabase
 
-note top of MapperComponent: ビジネスロジック
+note top of MapperComponent: ドメインロジック
 
 @enduml

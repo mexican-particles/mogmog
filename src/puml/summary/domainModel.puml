@@ -5,6 +5,6 @@
 
 Service .right.> User: use
 
-note top of User: ビジネスロジック
+note top of User: ドメインロジック
 
 @enduml
